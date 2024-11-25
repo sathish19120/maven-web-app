@@ -21,9 +21,9 @@ pipeline {
                 echo 'scanning project'
                 sh 'ls -ltr'
                 
-                sh ''' mvn sonar:sonar \\
-                      -Dsonar.host.url=http://127.0.0.1:9000 \\
-                      -Dsonar.login=squ_aa95cd0168eb8b4402b076a73ce13f1a01813a9d'''
+                sh ''' mvn sonar:sonar 
+                      -Dsonar.host.url=http://http://54.237.130.252:9000/ 
+                      -Dsonar.login=squ_dcdd0f5cbc92f86629a71683f890503e2d3f7f37'''
             }
     	}
 		
@@ -49,9 +49,9 @@ pipeline {
        stage('Push to Dockerhub') {
             steps {
 			 script {
-			withCredentials([string(credentialsId: 'Docker', variable: 'Docker')]) 
+			withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) 
 			{
-            sh 'docker login -u sathishsiddamsetty -p ${Docker}'
+            sh 'docker login -u sathishsiddamsetty -p ${dockerhub}'
 			
 			 }
 			   sh 'docker push sathishsiddamsetty/doc:${BUILD_NUMBER}'
