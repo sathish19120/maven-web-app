@@ -5,7 +5,7 @@ pipeline {
         EKS_NAMESPACE = "default"
         SONARQUBE_URL = "http://54.237.130.252:9000"
         SONARQUBE_TOKEN = "squ_dcdd0f5cbc92f86629a71683f890503e2d3f7f37"
-        KUBECONFIG = credentials('eks-kubeconfig') // Add kubeconfig in Jenkins credentials
+        
     }
     stages {
         stage('Checkout Code') {
