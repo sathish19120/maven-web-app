@@ -1,54 +1,42 @@
 pipeline {
     agent any
-
-
-       tools {
-        maven 'maven3'
+    environment {
+        DOCKER_IMAGE = "sathishsiddamsetty/maven-web-app:latest"
+        EKS_NAMESPACE = "default"
+        SONARQUBE_URL = "http://54.237.130.252:9000"
+        SONARQUBE_TOKEN = "squ_dcdd0f5cbc92f86629a71683f890503e2d3f7f37"
+        KUBECONFIG = credentials('eks-kubeconfig') // Add kubeconfig in Jenkins credentials
     }
-
     stages {
-      stage('checkout') {
+        stage('Checkout Code') {
             steps {
-                echo 'Cloning GIT HUB Repo '
-				git branch: 'main', url: 'https://github.com/sathish19120/maven-web-app.git'
-            }  
-        }
-		
-		
-		
-	 stage('sonar') {
-            steps {
-                echo 'scanning project'
-                sh 'ls -ltr'
-                
-                sh ''' mvn sonar:sonar 
-                      -Dsonar.host.url=http://http://54.237.130.252:9000/ 
-                      -Dsonar.login=squ_dcdd0f5cbc92f86629a71683f890503e2d3f7f37'''
-            }
-    	}
-		
-		
-		
-        stage('Build Artifact') {
-            steps {
-                echo 'Build Artifact'
-				sh 'mvn clean package'
+                git branch: 'main', url: 'https://github.com/sathish19120/maven-web-app.git'
             }
         }
-		
-		
-		
-        stage('Docker Image') {
+        stage('Static Code Analysis') {
             steps {
-                echo 'Docker Image building'
-				sh 'docker build -t sathishsiddamsetty/doc:${BUILD_NUMBER} .'
+                script {
+                    def scannerHome = tool 'SonarQubeScanner'; // Configure this in Jenkins global tools
+                    withSonarQubeEnv('SonarQube') { // Name configured in Jenkins for SonarQube
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=website \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=${http://54.237.130.252:9000} \
+                        -Dsonar.login=${squ_dcdd0f5cbc92f86629a71683f890503e2d3f7f37}
+                        """
+                    }
+                }
             }
         }
-		
-		
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t ${doc} ."
+            }
+        }
        stage('Push to Dockerhub') {
             steps {
-			 script {
+			script {
 			withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) 
 			{
             sh 'docker login -u sathishsiddamsetty -p ${dockerhub}'
@@ -61,38 +49,21 @@ pipeline {
 				
             }
         }
-		
-		
-    stage('Update Deployment File') {
-		
-		 environment {
-            GIT_REPO_NAME = "maven-web-app"
-            GIT_USER_NAME = "sathish19120"
-        }
-		
+        stage('Deploy to Kubernetes') {
             steps {
-                echo 'Update Deployment File'
-				withCredentials([string(credentialsId: 'Githubtoken', variable: 'Githubtoken')]) 
-				{
-                  sh '''
-                    git config user.email "sathish.ss19120@gmail.com"
-                    git config user.name "sathish19120"
-                    BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i "s/doc:.*/doc:${BUILD_NUMBER}/g" deploymentfiles/deployment.yml
-                    git add .
-                    
-                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-
-                    git push https://${Githubtoken}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                '''
-				  
-                 }
-				
+                sh """
+                kubectl apply -f k8s/deployment.yaml
+                kubectl apply -f k8s/service.yaml
+                """
             }
         }
-		
-		
-			
     }
-
+    post {
+        success {
+            echo 'Deployment Successful! Access your website.'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for details.'
+        }
+    }
 }
