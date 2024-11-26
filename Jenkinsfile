@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = "sathishsiddamsetty/maven-web-app:latest"
+        DOCKER_IMAGE = "sathishsiddamsetty/doc:latest"
         EKS_NAMESPACE = "default"
         SONARQUBE_URL = "http://54.237.130.252:9000"
         SONARQUBE_TOKEN = "squ_dcdd0f5cbc92f86629a71683f890503e2d3f7f37"
