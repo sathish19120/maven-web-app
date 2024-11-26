@@ -23,8 +23,10 @@ pipeline {
                   withSonarQubeEnv('SonarQube-Server') { 
                         sh """
                         $SCANNER_HOME/bin/bin/sonar-scanner \
-                        -Dsonar.projectName=website \
-						-Dsonar.projectKey=website"""
+                           -Dsonar.projectKey=website \
+                           -Dsonar.sources=. \
+                           -Dsonar.host.url=http://54.175.173.117:9000 \
+                           -Dsonar.token=sqp_214f3c26d947317442c293c43f48647199b624ba"""
                     }
                 }
             }
