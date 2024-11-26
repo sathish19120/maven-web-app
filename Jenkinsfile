@@ -1,62 +1,70 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_IMAGE = "sathishsiddamsetty/doc:latest"
-        EKS_NAMESPACE = "default"
-        SONARQUBE_URL = "http://54.237.130.252:9000"
-        SONARQUBE_TOKEN = "squ_dcdd0f5cbc92f86629a71683f890503e2d3f7f37"
-        
-    }
+    tools{
+	    jdk 'jdk17'
+		nodejs 'node16'
+	}
+	environment {
+	     SCANNER_HOME = tool 'sonar-scanner'
+	}
     stages {
-        stage('Checkout Code') {
+	    stage('clean workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Checkout from Git') {
             steps {
                 git branch: 'main', url: 'https://github.com/sathish19120/maven-web-app.git'
             }
         }
-        stage('Static Code Analysis') {
+        stage('SonarQube Analysis') {
             steps {
-                script {
-                    def scannerHome = tool 'SonarQubeScanner'; // Configure this in Jenkins global tools
-                    withSonarQubeEnv('SonarQube') { // Name configured in Jenkins for SonarQube
+                  withSonarQubeEnv('SonarQube-Server') { 
                         sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=website \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=${http://54.237.130.252:9000} \
-                        -Dsonar.login=${squ_dcdd0f5cbc92f86629a71683f890503e2d3f7f37}
-                        """
+                        $SCANNER_HOME/bin/bin/sonar-scanner \
+                        -Dsonar.projectName=website \
+						-Dsonar.projectKey=website"""
                     }
                 }
             }
-        }
-        stage('Build Docker Image') {
+		 stage('Quality Gate') {
             steps {
-                sh "docker build -t ${doc} ."
+			    script {
+				     waitForQualityGate abortPipeline: false, credentialsId: 'SonarQube-Token'
+                    }
+                }
             }
+		 stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            } 
         }
-       stage('Push to Dockerhub') {
+          stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.txt"
+            }
+        }		
+            stage('Docker Build & Push to Dockerhub') {
             steps {
 			script {
-			withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) 
+			withDockerRegistery(CredentialsID: 'dockerhub', toolname: 'dockerhub')
 			{
-            sh 'docker login -u sathishsiddamsetty -p ${dockerhub}'
+			sh "docker build -t maven-web-app ."
+            sh "docker tag maven-web-app sathish19120/maven-web-app:latest"
+			sh "docker push sathishsiddamsetty/maven-web-app:${BUILD_NUMBER}"
 			
-			 }
-			   sh 'docker push sathishsiddamsetty/doc:${BUILD_NUMBER}'
-			   
-           
-				}
+			  }          
+		   }
 				
-            }
         }
-        stage('Deploy to Kubernetes') {
+    }
+	stage("TRIVY") {
             steps {
-                sh """
-                kubectl apply -f k8s/deployment.yaml
-                kubectl apply -f k8s/service.yaml
-                """
+                sh "trivy image sathish19120/maven-web-app:latest > trivyimage.txt"
             }
         }
+        
     }
     post {
         success {
