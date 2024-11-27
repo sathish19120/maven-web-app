@@ -48,12 +48,12 @@ pipeline {
             }
         }		
             stage('Docker Build & Push to Dockerhub') {
-            steps {
-			script {
+               steps {
+		  script {
 			withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){
-			sh "docker build -t maven-web-app ."
-                        sh "docker tag maven-web-app sathish19120/maven-web-app:latest"
-			sh "docker push sathishsiddamsetty/maven-web-app:latest"
+			  sh "docker build -t maven-web-app ."
+                          sh "docker tag maven-web-app sathishsiddamsetty/maven-web-app:latest"
+			  sh "docker push sathishsiddamsetty/maven-web-app:latest"
 			
 			  }          
 		   }
