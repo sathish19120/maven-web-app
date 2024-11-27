@@ -50,10 +50,9 @@ pipeline {
             stage('Docker Build & Push to Dockerhub') {
             steps {
 			script {
-			withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker')
-			{
+			withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){
 			sh "docker build -t maven-web-app ."
-            sh "docker tag maven-web-app sathish19120/maven-web-app:latest"
+                        sh "docker tag maven-web-app sathish19120/maven-web-app:latest"
 			sh "docker push sathishsiddamsetty/maven-web-app:latest"
 			
 			  }          
@@ -67,13 +66,5 @@ pipeline {
             }
         }
         
-    }
-    post {
-        success {
-            echo 'Deployment Successful! Access your website.'
-        }
-        failure {
-            echo 'Pipeline failed. Check logs for details.'
-        }
     }
 }
