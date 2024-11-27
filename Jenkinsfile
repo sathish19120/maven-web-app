@@ -21,22 +21,17 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube-Server') {
-                    withCredentials([string(credentialsId: 'SonarQube-Token', variable: 'SONAR_TOKEN')]) {
-                        sh """
+                     sh """
                         $SCANNER_HOME/bin/sonar-scanner \
-                           -Dsonar.projectKey=website \
-                           -Dsonar.sources=. \
-                           -Dsonar.host.url=http://3.84.241.65:9000 \
-                           -Dsonar.login=$SONAR_TOKEN
-                        """
-                    }
+                           -Dsonar.projectName=maven-web-app \
+                           -Dsonar.projectKey=maven-web-app"""
                 }
             }
         }
         stage('Quality Gate') {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false
+                    waitForQualityGate abortPipeline: false, credentialsId: 'SonarQube-Token'
                 }
             }
         }
