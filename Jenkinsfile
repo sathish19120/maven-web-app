@@ -54,7 +54,7 @@ pipeline {
 			{
 			sh "docker build -t maven-web-app ."
             sh "docker tag maven-web-app sathish19120/maven-web-app:latest"
-			sh "docker push sathishsiddamsetty/maven-web-app:${BUILD_NUMBER}"
+			sh "docker push sathishsiddamsetty/maven-web-app:latest"
 			
 			  }          
 		   }
