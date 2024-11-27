@@ -25,7 +25,7 @@ pipeline {
                         $SCANNER_HOME/bin/bin/sonar-scanner \
                            -Dsonar.projectKey=website \
                            -Dsonar.sources=. \
-                           -Dsonar.host.url=http://34.228.38.203/:9000 \
+                           -Dsonar.host.url=http://3.84.241.65/:9000 \
                            -Dsonar.token=sqp_214f3c26d947317442c293c43f48647199b624ba"""
                     }
                 }
