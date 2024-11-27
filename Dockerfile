@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image
-FROM node:16 AS builder
+FROM node:16
 
 # Set the working directory in the container
 WORKDIR /app
@@ -7,23 +7,17 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install app dependencies
+# Install app dependencies, including Material-UI 5
 RUN npm install
 
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Build the React app for production
+# Build the React app
 RUN npm run build
 
-# Use a lightweight HTTP server to serve the production build
-FROM nginx:alpine
+# Expose the port that the app will run on (adjust if needed)
+EXPOSE 3000
 
-# Copy the build folder to nginx's default HTML location
-COPY --from=builder /app/build /usr/share/nginx/html
-
-# Expose port 80 for the production server
-EXPOSE 80
-
-# Start nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Define the command to start the app
+CMD ["npm", "start"]
