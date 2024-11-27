@@ -50,7 +50,7 @@ pipeline {
             stage('Docker Build & Push to Dockerhub') {
             steps {
 			script {
-			withDockerRegistry(CredentialsId: 'dockerhub', toolName: 'docker')
+			withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker')
 			{
 			sh "docker build -t maven-web-app ."
             sh "docker tag maven-web-app sathish19120/maven-web-app:latest"
