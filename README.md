@@ -22,3 +22,12 @@ sudo usermod -aG docker jenkins
 sudo usermod -aG docker ec2-user
 sudo systemctl restart docker
 sudo chmod 666 /var/run/docker.sock
+
+Docker install 
+-------------------------------------------------
+sudo yum install docker -y
+sudo systemctl start docker
+sudo usermod -aG docker jenkins
+sudo usermod -aG docker ec2-user
+sudo systemctl restart docker
+sudo chmod 666 /var/run/docker.sock
