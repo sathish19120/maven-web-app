@@ -47,3 +47,10 @@ curl -LO "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$
 tar -xzf eksctl_$(uname -s)_amd64.tar.gz
 sudo mv eksctl /usr/local/bin
 eksctl version
+
+
+Create EKS cluster
+-----------------------------------------------------
+eksctl create cluster --name mycluster --nodegroup-name mynode --node-type t3.micro --nodes 2 --managed
+
+check ekscluster --version
