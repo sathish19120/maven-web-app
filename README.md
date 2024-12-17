@@ -75,3 +75,17 @@ Create EKS cluster
 eksctl create cluster --name mycluster --nodegroup-name mynode --node-type t3.micro --nodes 2 --managed
 
 check ekscluster --version
+
+
+Install Docker with sonarqube
+-----------------------------------------------------
+Docker run –itd –name sonar –p 9000:9000 sonarqube
+
+ Open a web browser and go to http://<your-server-ip>:9000
+ 
+ The default login credentials are:
+
+1. Username: admin
+   
+3. Password: admin
+
