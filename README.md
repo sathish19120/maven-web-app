@@ -33,6 +33,16 @@ sudo systemctl restart docker
 
 sudo chmod 666 /var/run/docker.sock
 
+Travy Install
+-----------------------------------------------------
+wget https://github.com/aquasecurity/trivy/releases/download/v0.57.1/trivy_0.57.1_Linux-64bit.tar.gz
+
+tar zxvf trivy_0.57.1_Linux-64bit.tar.gz
+
+sudo mv trivy /usr/local/bin/
+
+trivy --version
+
 Docker install 
 -------------------------------------------------
 sudo yum install docker -y
