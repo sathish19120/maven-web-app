@@ -1,4 +1,4 @@
-# maven web-app
+# maven web-app Application
 
 Maven web app website#
 
