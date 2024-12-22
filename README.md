@@ -1,6 +1,4 @@
-# maven web-app Application
-
-Maven web app website#
+# Maven Web-App Application Website
 
 Creating website using Apache2 Web server
 
