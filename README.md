@@ -96,7 +96,7 @@ Docker run –itd –name sonar –p 9000:9000 sonarqube
  
  The default login credentials are:
 
-1. Username: admin
+1. Username: admin/
    
 3. Password: admin
 
