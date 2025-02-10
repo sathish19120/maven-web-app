@@ -24,7 +24,7 @@ sudo systemctl enable jenkins /
 
 sudo systemctl start jenkins
 
-User & group 
+User & Group 
 --------------------------------------------------
 sudo usermod -aG docker jenkins
 
@@ -58,7 +58,7 @@ sudo systemctl restart docker
 
 sudo chmod 666 /var/run/docker.sock
 
-kubectl #kubernetes 
+kubectl #Kubernetes 
 ------------------------------------------------
 # Install kubectl
 
