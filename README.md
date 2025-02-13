@@ -2,7 +2,7 @@
 
 Creating website using Apache2 Web server
 
-#Install & create Ec2 Machine 
+#Install & create Ec2 Machine Medium Container
 
 Install jenkins, kubernetes , docker, Helm, Monitoring Grafana, Prometheus 
 
