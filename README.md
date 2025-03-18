@@ -6,7 +6,7 @@ Creating website using Apache2 Web server
 
 Install jenkins, kubernetes , docker, Helm, Monitoring Grafana, Prometheus 
 
-jenkins Install
+jenkins Install APP
 ----------------------------------------------
 sudo yum update -y /
 
