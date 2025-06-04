@@ -96,7 +96,7 @@ check ekscluster --version
 
 Install Docker with sonarqube
 -----------------------------------------------------
-Docker run –itd –name sonar –p 9000:9000 sonarqube
+Docker run –itd -–name sonar –p 9000:9000 sonarqube
 
  Open a web browser and go to http://<your-server-ip>:9000
  
