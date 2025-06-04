@@ -84,6 +84,7 @@ eksctl version
 Create EKS cluster
 -----------------------------------------------------
 AWS Configure
+
 eksctl create cluster --name mycluster --nodegroup-name mynode --node-type t3.micro --nodes 2 --managed
 
 check ekscluster --version
